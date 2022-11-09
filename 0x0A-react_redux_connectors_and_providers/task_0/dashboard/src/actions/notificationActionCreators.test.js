@@ -1,30 +1,34 @@
-import Adapter from 'enzyme-adapter-react-16';
-import { shallow, configure, mount, } from 'enzyme';
-import { StyleSheetTestUtils, } from 'aphrodite';
 import {
   MARK_AS_READ,
   SET_TYPE_FILTER,
   NotificationTypeFilters,
-} from './notificationActionTypes.js';
+} from "./notificationActionTypes";
+
 import {
   markAsAread,
   setNotificationFilter,
-} from './notificationActionCreators.js';
+} from "./notificationActionCreators";
 
-configure({ adapter: new Adapter() });
+describe("action creators tests", function () {
+  it("returns correct action for markAsRead", function () {
+    const expectedReturn = {
+      type: MARK_AS_READ,
+      index: 1,
+    };
 
-StyleSheetTestUtils.suppressStyleInjection();
+    const result = markAsAread(1);
 
+    expect(result).toEqual(expectedReturn);
+  });
 
-describe('Notification test', () => {
-	it('Test markAsAread', () => {
-	  expect(markAsAread(1)).toEqual({ type: MARK_AS_READ, index: 1 });
-	});
+  it("returns correct action for setNotificationFilter", function () {
+    const expectedReturn = {
+      type: SET_TYPE_FILTER,
+      filter: "DEFAULT",
+    };
 
-	it('Test setNotificationFilter', () => {
-	  expect(setNotificationFilter(NotificationTypeFilters.DEFAULT)).toEqual({
-		type: SET_TYPE_FILTER,
-		filter: "DEFAULT"
-	  });
-	});
-  })
+    const result = setNotificationFilter(NotificationTypeFilters.DEFAULT);
+
+    expect(result).toEqual(expectedReturn);
+  });
+});

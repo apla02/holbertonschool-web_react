@@ -1,38 +1,42 @@
-import React from 'react';
-import { shallow, configure } from 'enzyme';
-import { expect as expectChai } from 'chai';
-import BodySectionWithMarginBottom from './BodySectionWithMarginBottom'
-import BodySection from './BodySection'
-import Adapter from 'enzyme-adapter-react-16';
+import { shallow, mount } from "enzyme";
+import React from "react";
+import BodySectionWithMarginBottom from "./BodySectionWithMarginBottom";
 import { StyleSheetTestUtils } from "aphrodite";
-configure({
-	adapter: new Adapter()
-});
 
-
-describe('Test BodySectionWithMarginBottom.js', () => {
-	beforeAll(() => {
-		StyleSheetTestUtils.suppressStyleInjection();
-	  });
-
-	  afterAll(() => {
-		StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-	  });
-  it('Render without crashing', (done) => {
-    expectChai(shallow(<BodySectionWithMarginBottom title='test title' />).exists());
-    done();
+describe("<BodySectionWithMarginBottom />", () => {
+  beforeAll(() => {
+    StyleSheetTestUtils.suppressStyleInjection();
   });
-  
+  afterAll(() => {
+    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+  });
 
-  it ('Test if render correctly a BodySection component and that the props are passed correctly to the child component', (done) => {
-    const wrapper = shallow(<BodySectionWithMarginBottom title='test title'><p>test children node</p></BodySectionWithMarginBottom>)
-    expectChai(wrapper.contains(<div className='bodySectionWithMargin' />));
-    expectChai(wrapper.children()).to.have.lengthOf(1);
-    expectChai(wrapper.find(BodySection)).to.have.lengthOf(1);
-    expectChai(wrapper.find(BodySection).children()).to.have.lengthOf(1);
-    expectChai(wrapper.find(BodySection).props().title).to.equal('test title');
-    expectChai(wrapper.find('p')).to.have.lengthOf(1);
-    expectChai(wrapper.find('p').text()).to.equal('test children node');
-    done();
-  })
+  it("BodySectionWithMarginBottom renders without crashing", () => {
+    const wrapper = shallow(<BodySectionWithMarginBottom />);
+    expect(wrapper.exists()).toEqual(true);
+  });
+
+  it("Shallowing the component should render correctly a BodySection component and that the props are passed correctly to the child component", () => {
+    const wrapper = shallow(
+      <BodySectionWithMarginBottom title="test title">
+        <p>test children node</p>
+      </BodySectionWithMarginBottom>
+    );
+
+    const BodySection = wrapper.find("BodySection");
+
+    expect(BodySection).toHaveLength(1);
+    expect(BodySection.props().title).toEqual("test title");
+
+    const internalBody = BodySection.dive();
+
+    const h2 = internalBody.find("h2");
+    const p = internalBody.find("p");
+
+    expect(h2).toHaveLength(1);
+    expect(h2.text()).toEqual("test title");
+
+    expect(p).toHaveLength(1);
+    expect(p.text()).toEqual("test children node");
+  });
 });

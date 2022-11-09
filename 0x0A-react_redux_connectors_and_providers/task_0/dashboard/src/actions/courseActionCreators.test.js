@@ -1,18 +1,15 @@
+import { selectCourse, unSelectCourse } from "./courseActionCreators";
+import { SELECT_COURSE, UNSELECT_COURSE } from "./courseActionTypes";
 
-import Adapter from 'enzyme-adapter-react-16';
-import { shallow, configure, mount, } from 'enzyme';
-import { StyleSheetTestUtils, } from 'aphrodite';
-import { SELECT_COURSE, UNSELECT_COURSE, } from './courseActionTypes';
-import { selectCourse, unSelectCourse, } from './courseActionCreators';
+describe("action creators tests", function () {
+  it("selectCourse should return: { type: SELECT_COURSE, index: 1 }", function () {
+    const result = selectCourse(1);
 
-
-describe('Test action creators', () => {
-	it('Test for the selectCourse action', () => {
-	  expect(selectCourse(1)).toEqual({ type: 'SELECT_COURSE', index: 1 });
-	});
-
-	it('Test for the unselectCourse action', () => {
-	  expect(unSelectCourse(1)).toEqual({ type: 'UNSELECT_COURSE', index: 1 });
-	});
-
+    expect(result).toEqual({ type: SELECT_COURSE, index: 1 });
   });
+  it("unSelectCourse should return: { type: UNSELECT_COURSE, index: 1 }", function () {
+    const result = unSelectCourse(1);
+
+    expect(result).toEqual({ type: UNSELECT_COURSE, index: 1 });
+  });
+});

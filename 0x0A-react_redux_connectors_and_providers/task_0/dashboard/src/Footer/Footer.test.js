@@ -1,29 +1,38 @@
-import React from 'react';
-import { expect } from 'chai';
-import Adapter from 'enzyme-adapter-react-16';
-import { shallow, configure } from 'enzyme';
-import Footer from './Footer';
-import { StyleSheetTestUtils } from "aphrodite";
+import { shallow, mount } from "enzyme";
+import React from "react";
+import Footer from "./Footer";
+import AppContext from "../App/AppContext";
+import { user, logOut } from "../App/AppContext";
 
+describe("<Footer />", () => {
+  it("Footer renders without crashing", () => {
+    const wrapper = shallow(<Footer />);
+    expect(wrapper.exists()).toEqual(true);
+  });
+  it("Verify that the components at the very least render the text “Copyright”", () => {
+    const wrapper = mount(<Footer />);
+    expect(wrapper.find("div.footer p")).toHaveLength(1);
+    expect(wrapper.find("div.footer p").text()).toContain("Copyright");
+  });
 
-configure({adapter: new Adapter()});
-describe("Testing the <Footer /> Component", () => {
-	beforeAll(() => {
-		StyleSheetTestUtils.suppressStyleInjection();
-	  });
+  it("verify that the link is not displayed when the user is logged out within the context", () => {
+    const wrapper = mount(
+      <AppContext.Provider value={{ user, logOut }}>
+        <Footer />
+      </AppContext.Provider>
+    );
+    expect(wrapper.find("div.footer a")).toHaveLength(0);
+  });
 
-	  afterAll(() => {
-		StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-	  });
-
-	let wrapper;
-
-	beforeEach(() => {
-		wrapper = shallow(<Footer shouldRender />);
-	});
-	it("<Footer /> is rendered without crashing", () => {
-		expect(wrapper.render()).to.not.be.an('undefined');
-	});
-
-
+  it("verify that the link is displayed when the user is logged in within the context", () => {
+    const wrapper = mount(
+      <AppContext.Provider
+        value={{ user: { ...user, isLoggedIn: true }, logOut }}
+      >
+        <Footer />
+      </AppContext.Provider>
+    );
+    expect(wrapper.find("div.footer a")).toHaveLength(1);
+    expect(wrapper.find("div.footer a").text()).toEqual("Contact us");
+  });
 });
